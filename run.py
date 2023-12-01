@@ -37,6 +37,7 @@ if __name__ == "__main__":
         try:
             from aocd import get_data
         except ImportError:
+            print("Error retrieving inputs with aocd")
             pass
         else:
             data = get_data(day=args.day, year=args.year)
