@@ -4,6 +4,7 @@ import time
 import traceback
 from datetime import datetime, timedelta, timezone
 from importlib import import_module, reload
+from aocd import submit
 
 
 def run(func, filename="filename"):
@@ -11,9 +12,11 @@ def run(func, filename="filename"):
         with open(filename) as f:
             try:
                 start = time.monotonic_ns()
-                print(func(f), end="\t")
+                result = func(f)
+                print(result, end="\t")
                 end = time.monotonic_ns()
                 print(f"[{(end-start) / 10**6:.3f} ms]")
+                return result
             except:
                 traceback.print_exc()
     except FileNotFoundError:
@@ -28,6 +31,8 @@ if __name__ == "__main__":
     parser.add_argument("--extra", "-e", help="Choose a different solution to run.")
     parser.add_argument("--sampleonly", "-s", action='store_true', help="Flag to only run sample.")
     parser.add_argument("--secondsample", "-ss", action='store_true', help="Flag to use sample2.")
+    parser.add_argument("--submit1", "-sub1", action='store_true', help="Submit solution one")
+    parser.add_argument("--submit2", "-sub2", action='store_true', help="Submit solution one")
     args = parser.parse_args()
 
     input_paths = {
@@ -71,4 +76,11 @@ if __name__ == "__main__":
         if not args.sampleonly:
             reload(module)
             print("input:", end="\t")
-            run(getattr(module, i), input_paths["input"])
+            my_answer = run(getattr(module, i), input_paths["input"])
+
+            if args.submit1 and i == "p1":
+                print("my answer:")
+                print(my_answer)
+                submit(my_answer, part="a", day=args.day, year=args.year)
+            if args.submit2 and i == "p2":
+                submit(my_answer, part="b", day=args.day, year=args.year)
