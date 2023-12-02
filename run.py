@@ -79,8 +79,6 @@ if __name__ == "__main__":
             my_answer = run(getattr(module, i), input_paths["input"])
 
             if args.submit1 and i == "p1":
-                print("my answer:")
-                print(my_answer)
                 submit(my_answer, part="a", day=args.day, year=args.year)
             if args.submit2 and i == "p2":
                 submit(my_answer, part="b", day=args.day, year=args.year)
